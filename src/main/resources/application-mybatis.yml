@@ -1,0 +1,45 @@
+# 数据源
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://localhost:3306/seckill?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&useSSL=false
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
+# 连接池
+    druid:
+      initial-size: 1
+      min-idle: 5
+      max-active: 20
+      validation-query: SELECT 1
+      remove-abandoned: true
+      remove-abandoned-timeout: 1800
+      filters: stat,wall
+      use-global-data-source-stat: true
+      
+# mybatis
+mybatis:
+  configuration:
+    cache-enabled: true
+    lazy-loading-enabled: true
+    aggressive-lazy-loading: false
+    use-column-label: true
+    map-underscore-to-camel-case: true
+  mapper-locations:
+    - classpath:mybatis/mapper/*Mapper.xml
+# 通用 Mapper
+mapper:
+  mappers:
+    - tk.mybatis.mapper.common.Mapper
+  identity: MYSQL
+# 分页插件
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+# 日志级别
+logging:
+  level:
+    root: info
+    cn.colg.dao: debug
