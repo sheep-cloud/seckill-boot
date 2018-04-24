@@ -3,6 +3,11 @@ package cn.colg.result;
 import cn.colg.enums.ExceptionEnum;
 import cn.colg.exception.ServiceException;
 
+/**
+ * 响应工具类
+ *
+ * @author colg
+ */
 public class ResultUtil {
 
 	/**

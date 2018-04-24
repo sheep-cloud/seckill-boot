@@ -5,6 +5,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import tk.mybatis.spring.annotation.MapperScan;
 
+/**
+ * Spring Boot 启动类
+ *
+ * @author colg
+ */
 @SpringBootApplication
 @MapperScan("cn.colg.dao")
 public class SeckillBootApplication {

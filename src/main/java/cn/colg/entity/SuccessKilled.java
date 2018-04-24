@@ -5,6 +5,11 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
 
+/**
+ * 秒杀 - entity
+ *
+ * @author colg
+ */
 @Table(name = "success_killed")
 public class SuccessKilled extends BaseEntity implements Serializable {
 	/**

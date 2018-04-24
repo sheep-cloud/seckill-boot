@@ -20,12 +20,14 @@ import cn.colg.result.ResultUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
- * 商品库存 Controller
+ * 商品库存 Controller <br />
+ * 
+ * // url：模块/资源/{id}/细分 /seckill/list
  *
  * @author colg
  */
 @Controller
-@RequestMapping("/seckill") // url：模块/资源/{id}/细分 /seckill/list
+@RequestMapping("/seckill")
 public class SeckillController extends BaseController {
 
 	/**
@@ -53,7 +55,8 @@ public class SeckillController extends BaseController {
 	@GetMapping("/{seckillId}/detail")
 	public String detail(@PathVariable(required = false) String seckillId, Model model) {
 		if (StrUtil.isBlank(seckillId)) {
-			return "redirect:/seckill/list";// 重定向到 list
+			// 重定向到 list
+			return "redirect:/seckill/list";
 		}
 
 		Seckill seckill = seckillService.findById(seckillId);
@@ -87,13 +90,12 @@ public class SeckillController extends BaseController {
 		Exposer exposer = seckillService.exportSeckillUrl(seckillId);
 		return ResultUtil.success(exposer);
 	}
-	
+
 	@PostMapping("/{seckillId}/{md5}/execution")
 	@ResponseBody
-	public ResultBean execute( @PathVariable("seckillId") String seckillId,
-			@PathVariable("md5") String md5,
+	public ResultBean execute(@PathVariable("seckillId") String seckillId, @PathVariable("md5") String md5,
 			@CookieValue(value = "killPhone", required = false) String phone) {
-		
+
 		SeckillExecution seckillExecution = seckillService.executeSekill(seckillId, phone, md5);
 		return ResultUtil.success(seckillExecution);
 	}

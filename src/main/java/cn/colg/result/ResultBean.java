@@ -2,6 +2,11 @@ package cn.colg.result;
 
 import java.io.Serializable;
 
+/**
+ * 返回的json对象
+ *
+ * @author colg
+ */
 public class ResultBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;

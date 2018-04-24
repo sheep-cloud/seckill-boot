@@ -139,7 +139,6 @@ var seckill = {
 			var startTime = params["startTime"];
 			var endTime = params["endTime"];
 			
-			
 			/*这种方式也可以*/
 /*			console.log(params);
 			console.log(killPhone);

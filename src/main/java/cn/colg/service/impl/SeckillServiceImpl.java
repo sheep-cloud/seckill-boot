@@ -30,7 +30,7 @@ public class SeckillServiceImpl extends BaseServiceImpl implements SeckillServic
 	 * md5盐值字符串，用于混淆md5
 	 */
 	@Value("${SLAT}")
-	private String SLAT;
+	private String slat;
 
 	@Override
 	public List<Seckill> querySeckill() {
@@ -71,29 +71,31 @@ public class SeckillServiceImpl extends BaseServiceImpl implements SeckillServic
 	 * @return
 	 */
 	private String getMd5(String seckillId) {
-		String data = seckillId + "/" + SLAT;
+		String data = seckillId + "/" + slat;
 		String md5 = SecureUtil.md5(data);
 		return md5;
 	}
-	
-	/*
+
+	/**
+	 * <pre>
 	 * 使用注解控制事务方法的优点：
-	 * 1：开发团队达成一致约定，明确标注事务方法的变成风格。
-	 * 2：保证事务方法的执行时间尽可能短，不要穿插其他网络操作RPC/HTTP请求或者剥离到事务方法外部。
-	 * 3：不是所有的方法都需要事务，如：只有一条修改操作，只读操作不需要事务控制。
+	 * 	1：开发团队达成一致约定，明确标注事务方法的变成风格。
+	 * 	2：保证事务方法的执行时间尽可能短，不要穿插其他网络操作RPC/HTTP请求或者剥离到事务方法外部。
+	 * 	3：不是所有的方法都需要事务，如：只有一条修改操作，只读操作不需要事务控制。
+	 * </pre>
 	 */
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public SeckillExecution executeSekill(String seckillId, String phone, String md5) {
 		if (!StrUtil.isBlank(seckillId)) {
 			ResultUtil.throwException(200, "手机号码不存在！");
 		}
-		
+
 		if (StrUtil.isBlank(md5) || !md5.equals(getMd5(seckillId))) {
 			// md5不同，秒杀的数据被改写
 			return new SeckillExecution(seckillId, ExceptionEnum.DATA_REWRITE);
 		}
-		
+
 		// 执行秒杀逻辑：减库存 + 记录购买行为
 		// 减库存
 		int updateCount = seckillMapper.reduceNumber(seckillId, new Date());
@@ -101,14 +103,14 @@ public class SeckillServiceImpl extends BaseServiceImpl implements SeckillServic
 			// 没有更新到记录，秒杀结束
 			return new SeckillExecution(seckillId, ExceptionEnum.END);
 		}
-		
+
 		// 记录用户购买行为，唯一：seckillId，userPhone
 		int insertCount = successKilledMapper.insertSuccessKilled(seckillId, phone);
 		if (insertCount <= 0) {
 			// 重复秒杀
 			return new SeckillExecution(seckillId, ExceptionEnum.REPEAT_KILL);
 		}
-		
+
 		// 秒杀成功
 		SuccessKilled successKilled = successKilledMapper.findBySeckillIdAndPhone(seckillId, phone);
 		return new SeckillExecution(seckillId, ExceptionEnum.SUCCESS, successKilled);

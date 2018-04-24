@@ -1,14 +1,15 @@
-package cn.colg.configuration;
+package cn.colg.config;
 
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 
-import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.collection.CollUtil;
 
 /**
  * java配置类
@@ -28,20 +29,24 @@ public class JavaConfig {
 	@Bean
 	public HttpMessageConverters httpMessageConverters() {
 		FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
-		// 设置默认字符集
-		converter.setDefaultCharset(CharsetUtil.CHARSET_UTF_8);
+		// 设置字符集
+		converter.setSupportedMediaTypes(CollUtil.newArrayList(MediaType.APPLICATION_JSON_UTF8));
 		FastJsonConfig config = new FastJsonConfig();
 		// 设置序列化规则
 		config.setSerializerFeatures(
-					SerializerFeature.WriteDateUseDateFormat,				// 日期时间	毫秒	->	"yyyy-MM-dd HH:mm:ss"
-					SerializerFeature.WriteMapNullValue,					// 输出值为null的字段
-					SerializerFeature.WriteNullStringAsEmpty,				// String null	->	""	
-					SerializerFeature.WriteNullListAsEmpty,					// List null	->	[]
-					SerializerFeature.DisableCircularReferenceDetect		// 消除对同一对象循环引用
-				);
-		
+				// 日期时间 毫秒 -> "yyyy-MM-dd HH:mm:ss"
+				SerializerFeature.WriteDateUseDateFormat,
+				// 输出值为null的字段
+				SerializerFeature.WriteMapNullValue,
+				// String null -> ""
+				SerializerFeature.WriteNullStringAsEmpty,
+				// List null -> []
+				SerializerFeature.WriteNullListAsEmpty,
+				// 消除对同一对象循环引用
+				SerializerFeature.DisableCircularReferenceDetect
+			);
 		converter.setFastJsonConfig(config);
 		return new HttpMessageConverters(converter);
 	}
-	
+
 }

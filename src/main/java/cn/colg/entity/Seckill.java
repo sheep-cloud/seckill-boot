@@ -5,6 +5,11 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
 
+/**
+ * 商品库存 - entity
+ *
+ * @author colg
+ */
 @Table(name = "seckill")
 public class Seckill extends BaseEntity implements Serializable {
     /**
